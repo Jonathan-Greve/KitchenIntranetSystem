@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace KitchenIntranetSystem.Data.Migrations
 {
-    public partial class InitialExpesesModel : Migration
+    public partial class ExpensesModelModifiedWithFK : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,30 +17,33 @@ namespace KitchenIntranetSystem.Data.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles");
 
+            migrationBuilder.AddColumn<string>(
+                name: "FirstName",
+                table: "AspNetUsers",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "LastName",
+                table: "AspNetUsers",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Expenses",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApplicationUserIDId = table.Column<string>(nullable: true),
-                    ApplicationUserId = table.Column<string>(nullable: true),
                     BeerExpense = table.Column<decimal>(nullable: false),
                     FoodExpense = table.Column<decimal>(nullable: false),
-                    ShoppingExpense = table.Column<decimal>(nullable: false)
+                    ShoppingExpense = table.Column<decimal>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Expenses", x => x.ID);
+                    table.PrimaryKey("PK_Expenses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Expenses_AspNetUsers_ApplicationUserIDId",
-                        column: x => x.ApplicationUserIDId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Expenses_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_Expenses_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -53,14 +56,9 @@ namespace KitchenIntranetSystem.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Expenses_ApplicationUserIDId",
+                name: "IX_Expenses_UserId",
                 table: "Expenses",
-                column: "ApplicationUserIDId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Expenses_ApplicationUserId",
-                table: "Expenses",
-                column: "ApplicationUserId");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -71,6 +69,14 @@ namespace KitchenIntranetSystem.Data.Migrations
             migrationBuilder.DropIndex(
                 name: "RoleNameIndex",
                 table: "AspNetRoles");
+
+            migrationBuilder.DropColumn(
+                name: "FirstName",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "LastName",
+                table: "AspNetUsers");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_UserId",

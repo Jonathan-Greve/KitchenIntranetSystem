@@ -8,8 +8,8 @@ using KitchenIntranetSystem.Data;
 namespace KitchenIntranetSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170426120052_[AddedFirstAndLastNameToApplicationUser]")]
-    partial class AddedFirstAndLastNameToApplicationUser
+    [Migration("20170429091148_ExpensesModelModifiedWithFK")]
+    partial class ExpensesModelModifiedWithFK
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -73,12 +73,8 @@ namespace KitchenIntranetSystem.Data.Migrations
 
             modelBuilder.Entity("KitchenIntranetSystem.Models.Expenses", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ApplicationUserIDId");
-
-                    b.Property<string>("ApplicationUserId");
 
                     b.Property<decimal>("BeerExpense");
 
@@ -86,11 +82,11 @@ namespace KitchenIntranetSystem.Data.Migrations
 
                     b.Property<decimal>("ShoppingExpense");
 
-                    b.HasKey("ID");
+                    b.Property<string>("UserId");
 
-                    b.HasIndex("ApplicationUserIDId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Expenses");
                 });
@@ -204,13 +200,9 @@ namespace KitchenIntranetSystem.Data.Migrations
 
             modelBuilder.Entity("KitchenIntranetSystem.Models.Expenses", b =>
                 {
-                    b.HasOne("KitchenIntranetSystem.Models.ApplicationUser", "ApplicationUserID")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserIDId");
-
-                    b.HasOne("KitchenIntranetSystem.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
+                    b.HasOne("KitchenIntranetSystem.Models.ApplicationUser", "User")
+                        .WithMany("Expenses")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

@@ -11,5 +11,7 @@ namespace KitchenIntranetSystem.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public ICollection<Expenses> Expenses { get; set; }
     }
 }
