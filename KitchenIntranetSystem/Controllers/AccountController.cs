@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using KitchenIntranetSystem.Models;
 using KitchenIntranetSystem.Models.AccountViewModels;
-using KitchenIntranetSystem.Services;
+using KitchenIntranetSystem.Interfaces;
 
 namespace KitchenIntranetSystem.Controllers
 {

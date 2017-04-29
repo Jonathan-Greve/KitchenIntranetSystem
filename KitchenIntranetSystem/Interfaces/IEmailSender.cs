@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KitchenIntranetSystem.Services
+namespace KitchenIntranetSystem.Interfaces
 {
     public interface IEmailSender
     {
