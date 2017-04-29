@@ -11,9 +11,9 @@ namespace KitchenIntranetSystem.Models
         public string UserId { get; set; }
         public int BeerCategoriesId { get; set; }
         public int AmountDrunk { get; set; }
+        public DateTime Date { get; set; }
 
         public ApplicationUser User { get; set; }
         public BeerCategories BeerCategories { get; set; }
-
     }
 }

@@ -24,5 +24,7 @@ namespace KitchenIntranetSystem.Data
         }
 
         public DbSet<KitchenIntranetSystem.Models.Expenses> Expenses { get; set; }
+        public DbSet<KitchenIntranetSystem.Models.Beers> Beers { get; set; }
+        public DbSet<KitchenIntranetSystem.Models.BeerCategories> BeerCategories { get; set; }
     }
 }

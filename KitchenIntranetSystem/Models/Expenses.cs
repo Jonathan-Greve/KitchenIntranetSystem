@@ -21,6 +21,7 @@ namespace KitchenIntranetSystem.Models
         public decimal KitchenAccountIncome { get; set; }
         public decimal StartBalance { get; set; }
         public decimal EndBalance { get; set; }
+        public DateTime Date { get; set; }
 
         public ApplicationUser User { get; set; }
     }
