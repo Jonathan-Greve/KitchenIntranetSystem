@@ -15,8 +15,14 @@ namespace KitchenIntranetSystem.Models
         public string UserId { get; set; }
         public decimal BeerExpense { get; set; }
         public decimal FoodExpense { get; set; }
-        public decimal ShoppingExpense { get; set; }
+        public decimal FoodIncome { get; set; }
+        public decimal ShoppingIncome { get; set; }
+        public decimal Subscription { get; set; }
+        public decimal KitchenAccountIncome { get; set; }
+        public decimal StartBalance { get; set; }
+        public decimal EndBalance { get; set; }
+        public DateTime Date { get; set; }
 
-        public virtual ApplicationUser User { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }

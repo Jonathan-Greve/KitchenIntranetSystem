@@ -8,9 +8,10 @@ using KitchenIntranetSystem.Data;
 namespace KitchenIntranetSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170429195219_AddedPropertiesToExpenses")]
+    partial class AddedPropertiesToExpenses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -70,52 +71,12 @@ namespace KitchenIntranetSystem.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("KitchenIntranetSystem.Models.BeerCategories", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("Name");
-
-                    b.Property<decimal>("Price");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BeerCategories");
-                });
-
-            modelBuilder.Entity("KitchenIntranetSystem.Models.Beers", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AmountDrunk");
-
-                    b.Property<int>("BeerCategoriesId");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BeerCategoriesId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Beers");
-                });
-
             modelBuilder.Entity("KitchenIntranetSystem.Models.Expenses", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<decimal>("BeerExpense");
-
-                    b.Property<DateTime>("Date");
 
                     b.Property<decimal>("EndBalance");
 
@@ -245,18 +206,6 @@ namespace KitchenIntranetSystem.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("KitchenIntranetSystem.Models.Beers", b =>
-                {
-                    b.HasOne("KitchenIntranetSystem.Models.BeerCategories", "BeerCategories")
-                        .WithMany()
-                        .HasForeignKey("BeerCategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("KitchenIntranetSystem.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("KitchenIntranetSystem.Models.Expenses", b =>

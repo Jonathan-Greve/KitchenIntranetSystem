@@ -8,9 +8,10 @@ using KitchenIntranetSystem.Data;
 namespace KitchenIntranetSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170429203304_AddedBeerModels")]
+    partial class AddedBeerModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -95,8 +96,6 @@ namespace KitchenIntranetSystem.Data.Migrations
 
                     b.Property<int>("BeerCategoriesId");
 
-                    b.Property<DateTime>("Date");
-
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
@@ -114,8 +113,6 @@ namespace KitchenIntranetSystem.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<decimal>("BeerExpense");
-
-                    b.Property<DateTime>("Date");
 
                     b.Property<decimal>("EndBalance");
 
