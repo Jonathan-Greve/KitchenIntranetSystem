@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using KitchenIntranetSystem.Data;
 using KitchenIntranetSystem.Models;
 using KitchenIntranetSystem.Services;
+using KitchenIntranetSystem.Interfaces;
 
 namespace KitchenIntranetSystem
 {
@@ -52,6 +53,7 @@ namespace KitchenIntranetSystem
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<IUser, User>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
