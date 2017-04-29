@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace KitchenIntranetSystem.Models
 {
-    public class KitchenAccounts
+    public class KitchenBankAccounts
     {
         public int Id { get; set; }
         public string UserId { get; set; } //Owner of the bank account.
@@ -13,6 +13,6 @@ namespace KitchenIntranetSystem.Models
         public bool? IsActive { get; set; } //Is the bank account still being used.
 
         public ApplicationUser User { get; set; }
-        public ICollection<BankDatas> BankDatas { get; set; }
+        public ICollection<BankAccountDatas> BankAccountDatas { get; set; }
     }
 }

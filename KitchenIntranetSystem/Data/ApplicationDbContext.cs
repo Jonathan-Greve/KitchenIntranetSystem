@@ -29,5 +29,8 @@ namespace KitchenIntranetSystem.Data
         public DbSet<KitchenIntranetSystem.Models.Shopping> Shopping { get; set; }
         public DbSet<KitchenIntranetSystem.Models.KitchenDinners> KitchenDinners { get; set; }
         public DbSet<KitchenIntranetSystem.Models.Participants> Participants { get; set; }
+        public DbSet<KitchenIntranetSystem.Models.KitchenBankAccounts> KitchenBankAccounts { get; set; }
+        public DbSet<KitchenIntranetSystem.Models.BankAccountDatas> BankAccountDatas { get; set; }
+
     }
 }

@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace KitchenIntranetSystem.Models
 {
-    public class BankDatas
+    public class BankAccountDatas
     {
         public int Id { get; set; }
-        public int KitchenAccountId { get; set; }
+        public int KitchenBankAccountId { get; set; }
         public decimal Total { get; set; }
         public decimal Debt { get; set; }
 
-        public KitchenAccounts KitchenAccount { get; set; }
+        public KitchenBankAccounts KitchenBankAccount { get; set; }
     }
 }
