@@ -1,0 +1,97 @@
+@model KitchenIntranetSystem.Models.Expenses
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Expenses</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="UserId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="BeerExpense" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="BeerExpense" class="form-control" />
+                <span asp-validation-for="BeerExpense" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FoodExpense" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FoodExpense" class="form-control" />
+                <span asp-validation-for="FoodExpense" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FoodIncome" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FoodIncome" class="form-control" />
+                <span asp-validation-for="FoodIncome" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ShoppingIncome" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ShoppingIncome" class="form-control" />
+                <span asp-validation-for="ShoppingIncome" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Subscription" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Subscription" class="form-control" />
+                <span asp-validation-for="Subscription" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="KitchenAccountIncome" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="KitchenAccountIncome" class="form-control" />
+                <span asp-validation-for="KitchenAccountIncome" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="StartBalance" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="StartBalance" class="form-control" />
+                <span asp-validation-for="StartBalance" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="EndBalance" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="EndBalance" class="form-control" />
+                <span asp-validation-for="EndBalance" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Date" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
