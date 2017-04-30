@@ -25,6 +25,7 @@ namespace KitchenIntranetSystem.Controllers
         // GET: Shopping
         public async Task<IActionResult> Index()
         {
+            ViewData["dataArray"] = new List<int> { 1, 2, 3, 4, 5, 6 };
             var applicationDbContext = _context.Shopping.Include(s => s.User);
             return View(await applicationDbContext.ToListAsync());
         }
