@@ -11,5 +11,6 @@ namespace KitchenIntranetSystem.Interfaces
         string GetFirstName(ClaimsPrincipal user);
         string GetLastName(ClaimsPrincipal user);
         string GetFullName(ClaimsPrincipal user);
+        string GetId(ClaimsPrincipal user);
     }
 }

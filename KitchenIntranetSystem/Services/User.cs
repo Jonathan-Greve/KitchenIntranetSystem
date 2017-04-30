@@ -26,6 +26,11 @@ namespace KitchenIntranetSystem.Services
             return GetFirstName(user) + " " + GetLastName(user);
         }
 
+        public string GetId(ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+
         // Constructor
         private readonly ApplicationDbContext _context;
         public User(ApplicationDbContext context)

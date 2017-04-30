@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KitchenIntranetSystem.Data;
 using KitchenIntranetSystem.Models;
+using KitchenIntranetSystem.Interfaces;
 
 namespace KitchenIntranetSystem.Controllers
 {
     public class ShoppingController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUser _user;
 
-        public ShoppingController(ApplicationDbContext context)
+        public ShoppingController(ApplicationDbContext context, IUser user)
         {
-            _context = context;    
+            _context = context;
+            _user = user;
         }
 
         // GET: Shopping
@@ -48,7 +51,7 @@ namespace KitchenIntranetSystem.Controllers
         // GET: Shopping/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["UserFullName"] = _user.GetFullName(User);
             return View();
         }
 
@@ -61,6 +64,7 @@ namespace KitchenIntranetSystem.Controllers
         {
             if (ModelState.IsValid)
             {
+                shopping.UserId = _user.GetId(User);
                 _context.Add(shopping);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -82,7 +86,7 @@ namespace KitchenIntranetSystem.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", shopping.UserId);
+            ViewData["UserFullName"] = _user.GetFullName(User);
             return View(shopping);
         }
 
