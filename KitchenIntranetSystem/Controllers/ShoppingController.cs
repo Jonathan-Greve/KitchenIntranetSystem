@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using KitchenIntranetSystem.Data;
 using KitchenIntranetSystem.Models;
 using KitchenIntranetSystem.Interfaces;
+using Newtonsoft.Json;
 
 namespace KitchenIntranetSystem.Controllers
 {
@@ -25,7 +26,15 @@ namespace KitchenIntranetSystem.Controllers
         // GET: Shopping
         public async Task<IActionResult> Index()
         {
-            ViewData["dataArray"] = new List<int> { 1, 2, 3, 4, 5, 6 };
+            var chartData = _context.Shopping
+                            .Where(d => DateTime.Now.AddDays(1) > d.Date && d.Date > DateTime.Now.AddYears(-1))
+                            .Select(c => new { c.Price, c.Date, c.User })
+                            .AsEnumerable()
+                            .Select(c => new Tuple<decimal, string, string>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id)))
+                            .OrderBy(d => d.Item2)
+                            .ToArray();
+            ViewData["UserNames"] = JsonConvert.SerializeObject(_user.GetAllUsersFullName);
+            ViewData["ChartData"] = JsonConvert.SerializeObject(chartData);
             var applicationDbContext = _context.Shopping.Include(s => s.User);
             return View(await applicationDbContext.ToListAsync());
         }
