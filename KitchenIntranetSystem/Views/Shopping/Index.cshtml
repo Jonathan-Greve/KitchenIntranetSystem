@@ -1,8 +1,14 @@
-@model IEnumerable<KitchenIntranetSystem.Models.Shopping>
+﻿@model IEnumerable<KitchenIntranetSystem.Models.Shopping>
 @{
     ViewData["Title"] = "Index";
+    var UserNames = ViewBag.UserNames;
+    var ChartData = ViewBag.ChartData;
 }
-<script src="~/js/Chart.bundle.js"></script>
+
+<script src="~/js/moment.js"></script>
+<script src="~/js/Chart.min.js"></script>
+<script src="~/js/utils.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <h2>Index</h2>
 
 <p>
@@ -50,68 +56,177 @@
 }
     </tbody>
 </table>
-<br />
-<br />
-<button id="showDay">Day</button>
-<button id="showWeek">Week</button>
-<button id="showMonth">Month</button>
-<canvas id="myChart" width="400" height="100"></canvas>
 
-<script type="text/javascript">
-    function SomeFunction() {
-        var array = @Html.Raw(Json.Serialize(ViewBag.dataArray));
-        return array;
-    }
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+        <div class="dropdown col-xs-12">
+            <button class="btn btn-primary dropdown-toggle col-xs-12" type="button" data-toggle="dropdown">
+                Users
+                <span class="caret"></span>
+            </button>
+            <ul id="dropDownUsers" class="dropdown-menu col-xs-12">
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6 ">
+        <div class="dropdown col-xs-12">
+            <button class="btn btn-primary dropdown-toggle col-xs-12" type="button" data-toggle="dropdown">
+                Dropdown Example
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu col-xs-12">
+                <li><a href="#">This Month</a></li>
+                <li><a href="#">Last Month</a></li>
+                <li><a href="#">Last 3 Months</a></li>
+                <li><a href="#">Last 6 Months</a></li>
+                <li><a href="#">Last 12 Months</a></li>
+            </ul>
+        </div>
+  </div>
+</div>
+<div class="col-md-12">
+    <canvas id="canvas"></canvas>
+<button id="addDataset">Add Dataset</button>
+<button id="removeDataset">Remove Dataset</button>
+<button id="addData">Add Data</button>
+<button id="removeData">Remove Data</button>
+</div>
+<script>
+    var userNames = @Html.Raw(UserNames);
+    var chartData = @Html.Raw(ChartData);
+    $(document).ready(function () {
+        var node = document.createElement("li"); // Create a <li> node
+        for (var i = 0; i < userNames.length; i++) {
+            node.innerHTML += "<a href='#'>" + userNames[i] + "</a>"
+        }
+        document.getElementById("dropDownUsers").appendChild(node);
+    });
 
-    var chartData = SomeFunction();
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
-        type: 'bar',
+    var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    var randomScalingFactor = function () {
+        return Math.round(Math.random() * 100);
+        //return 0;
+    };
+    var randomColorFactor = function () {
+        return Math.round(Math.random() * 255);
+    };
+    var randomColor = function (opacity) {
+        return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+    };
+
+    var config = {
+        type: 'line',
         data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                data: chartData,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
+            labels: [],
+            datasets: []
         },
         options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart'
+            },
             scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        show: true,
+                        labelString: 'Month'
+                    }
+                }],
                 yAxes: [{
-                    ticks: {
-                        beginAtZero:true
+                    display: true,
+                    scaleLabel: {
+                        show: true,
+                        labelString: 'Value'
                     }
                 }]
             }
         }
+    };
+
+    config.data.datasets.forEach(function (dataset) {
+        dataset.borderColor = randomColor(0.4);
+        dataset.backgroundColor = randomColor(0.5);
+        dataset.pointBorderColor = randomColor(0.7);
+        dataset.pointBackgroundColor = randomColor(0.5);
+        dataset.pointBorderWidth = 1;
     });
 
-    document.getElementById('showDay').addEventListener('click', function (){
-        //Show graph for days-data
-        alert("Show day graph!")
-    });
-    document.getElementById('showWeek').addEventListener('click', function () {
-        //Show graph for days-data
-        alert("Show week graph!")
-    });
-    document.getElementById('showMonth').addEventListener('click', function () {
-        //Show graph for days-data
-        alert("Show month graph!")
-    });
+    var ctx = document.getElementById("canvas").getContext("2d");
+    window.myLine = new Chart(ctx, config);
+
+    document.getElementById('addDataset').onclick = function () {
+        var newDataset = {
+            label: 'Dataset ' + config.data.datasets.length,
+            borderColor: randomColor(0.4),
+            backgroundColor: randomColor(0.5),
+            pointBorderColor: randomColor(0.7),
+            pointBackgroundColor: randomColor(0.5),
+            pointBorderWidth: 1,
+            data: [],
+        };
+
+        if (config.data.labels) {
+            for (var index = 0; index < config.data.labels.length; ++index) {
+                newDataset.data.push(randomScalingFactor());
+            }
+        }
+
+        config.data.datasets.push(newDataset);
+        window.myLine.update();
+    };
+
+    document.getElementById('addData').onclick = function () {
+        if (config.data.datasets.length > 0) {
+            var month = MONTHS[config.data.labels.length % MONTHS.length];
+            config.data.labels.push(month);
+
+            config.data.datasets.forEach(function (dataset) {
+                dataset.data.push(randomScalingFactor());
+            });
+
+            window.myLine.update();
+        }
+    };
+
+    document.getElementById('removeDataset').onclick = function () {
+        config.data.datasets.splice(0, 1);
+        window.myLine.update();
+    };
+
+    document.getElementById('removeData').onclick = function () {
+        config.data.labels.splice(-1, 1); // remove the label first
+
+        config.data.datasets.forEach(function (dataset, datasetIndex) {
+            dataset.data.pop();
+        });
+
+        window.myLine.update();
+    };
+
+    // ---------------- MY OWN SHIT ------------------------------------
+    document.getElementById('thisMonth').onclick = function () {
+        var newDataset = {
+            label: 'Dataset ' + config.data.datasets.length,
+            borderColor: randomColor(0.4),
+            backgroundColor: randomColor(0.5),
+            pointBorderColor: randomColor(0.7),
+            pointBackgroundColor: randomColor(0.5),
+            pointBorderWidth: 1,
+            data: [],
+        };
+
+        if (config.data.labels) {
+            for (var index = 0; index < config.data.labels.length; ++index) {
+                newDataset.data.push(randomScalingFactor());
+            }
+        }
+
+        config.data.datasets.push(newDataset);
+        window.myLine.update();
+    };
+
 </script>
