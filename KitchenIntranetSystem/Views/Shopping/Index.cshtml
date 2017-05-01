@@ -50,6 +50,11 @@
 }
     </tbody>
 </table>
+<br />
+<br />
+<button id="showDay">Day</button>
+<button id="showWeek">Week</button>
+<button id="showMonth">Month</button>
 <canvas id="myChart" width="400" height="100"></canvas>
 
 <script type="text/javascript">
@@ -95,5 +100,18 @@
                 }]
             }
         }
+    });
+
+    document.getElementById('showDay').addEventListener('click', function (){
+        //Show graph for days-data
+        alert("Show day graph!")
+    });
+    document.getElementById('showWeek').addEventListener('click', function () {
+        //Show graph for days-data
+        alert("Show week graph!")
+    });
+    document.getElementById('showMonth').addEventListener('click', function () {
+        //Show graph for days-data
+        alert("Show month graph!")
     });
 </script>
