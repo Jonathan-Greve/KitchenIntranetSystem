@@ -206,7 +206,7 @@
         window.myLine.update();
     };
 
-    function daysInMonth(month, year) {
+    function daysInMonthFunc(month, year) {
         return new Date(year, month, 0).getDate();
     }
 
@@ -234,10 +234,44 @@
         var n = d.getMonth();
         var c = d.getDay();
         debugger;
-        for (var j = 1; j <= c; j++) {
-            config.data.labels.push(MONTHS[n] + "-" + j);
-        }
         for (var i = 0; i < userNames.length; i++) {
+            var newDataset = {
+                label: userNames[i],
+                borderColor: randomColor(0.4),
+                backgroundColor: randomColor(0.5),
+                pointBorderColor: randomColor(0.7),
+                pointBackgroundColor: randomColor(0.5),
+                pointBorderWidth: 1,
+                data: new Array(c).fill(0), // 0-array of length c (set to null if you don't want points on the x-axis)
+                hidden: false, //false: show data on load.
+            };
+            for (var j = 0; j < chartData.length; ++j) {
+                if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n] && chartData[j].Item4 <= c) {
+                    var test = chartData[j].Item4;
+                    newDataset.data[test-1] = chartData[j].Item1;
+                }
+            }
+            config.data.datasets.push(newDataset);
+        }
+
+        // Add labels for the first c days of this month
+        for (var j = 1; j <= c; j++) {
+        }
+
+        //Show chart.
+        window.myLine.update();
+    });
+
+    $('#lastMonth').click(function () {
+        removeAllDataSets();
+        removeAllData();
+        var d = new Date();
+        var lastMonthInt = d.getMonth() - 1;
+        var daysInMonth;
+        debugger;
+
+        for (var i = 0; i < userNames.length; i++) {
+            daysInMonth = daysInMonthFunc(lastMonthInt+1, 2017);
             var newDataset = {
                 label: userNames[i],
                 borderColor: randomColor(0.4),
@@ -248,8 +282,8 @@
                 data: [],
                 hidden: false, //false: show data on load.
             };
-            for (var j = 0; j < chartData.length; ++j) {
-                if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n]) {
+            for (var j = 0; j < daysInMonth; ++j) {
+                if (chartData[j] != null && chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[lastMonthInt]) {
                     newDataset.data.push(chartData[j].Item1);
                 }
                 else {
@@ -258,47 +292,11 @@
             }
 
             config.data.datasets.push(newDataset);
-            window.myLine.update();
         }
-    });
-
-    $('#lastMonth').click(function () {
-        removeAllData();
-        removeAllDataSets();
-        var d = new Date();
-        var n = d.getMonth();
-        for (var i = 0; i < userNames.length; i++) {
-            var newDataset = {
-                label: userNames[i],
-                borderColor: randomColor(0.4),
-                backgroundColor: randomColor(0.5),
-                pointBorderColor: randomColor(0.7),
-                pointBackgroundColor: randomColor(0.5),
-                pointBorderWidth: 1,
-                data: [],
-                hidden: true,
-            };
-            for (var j = 0; j < chartData.length; ++j) {
-                if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n-1]) {
-                    newDataset.data.push(chartData[j].Item1);
-                    config.data.labels.push(chartData[j].Item2 + "-" + chartData[j].Item4)
-                }
-                else {
-                }
-            }
-
-            config.data.datasets.push(newDataset);
-            window.myLine.update();
+        for (var j = 1; j <= daysInMonth; j++) {
+            config.data.labels.push(MONTHS[lastMonthInt] + "-" + j);
         }
-    });
-    $('#lastThreeMonths').click(function () {
-        alert("lastThreeMonths");
-    });
-    $('#lastSixMonths').click(function () {
-        alert("lastSixMonths");
-    });
-    $('#lastTwelveMonths').click(function () {
-        alert("lastTwelveMonths");
+            window.myLine.update();
     });
 
 </script>

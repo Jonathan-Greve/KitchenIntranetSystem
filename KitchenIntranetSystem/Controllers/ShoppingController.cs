@@ -31,7 +31,7 @@ namespace KitchenIntranetSystem.Controllers
                             .Select(c => new { c.Price, c.Date, c.User })
                             .OrderByDescending(c => c.Date)
                             .AsEnumerable()
-                            .Select(c => new Tuple<decimal, string, string, string>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id), c.Date.ToString("dd")))
+                            .Select(c => new Tuple<decimal, string, string, int>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id), Int16.Parse(c.Date.ToString("dd"))))
                             .OrderBy(c => c.Item4)
                             .ToArray();
             ViewData["UserNames"] = JsonConvert.SerializeObject(_user.GetAllUsersFullName);
