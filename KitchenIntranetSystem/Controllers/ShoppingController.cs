@@ -26,17 +26,11 @@ namespace KitchenIntranetSystem.Controllers
         // GET: Shopping
         public async Task<IActionResult> Index()
         {
-            var chartData = _context.Shopping
-                            .Where(d => DateTime.Now > d.Date && d.Date > DateTime.Now.AddYears(-1))
-                            .Select(c => new { c.Price, c.Date, c.User })
-                            .OrderByDescending(c => c.Date)
-                            .AsEnumerable()
-                            .Select(c => new Tuple<decimal, string, string, int>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id), Int16.Parse(c.Date.ToString("dd"))))
-                            .OrderBy(c => c.Item4)
-                            .ToArray();
+            var chartData = GetChartData();
+            var applicationDbContext = _context.Shopping.Include(s => s.User);
+
             ViewData["UserNames"] = JsonConvert.SerializeObject(_user.GetAllUsersFullName);
             ViewData["ChartData"] = JsonConvert.SerializeObject(chartData);
-            var applicationDbContext = _context.Shopping.Include(s => s.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -170,6 +164,18 @@ namespace KitchenIntranetSystem.Controllers
         private bool ShoppingExists(int id)
         {
             return _context.Shopping.Any(e => e.Id == id);
+        }
+
+        private Tuple<decimal, string, string, int>[] GetChartData()
+        {
+            return _context.Shopping
+                                .Where(d => DateTime.Now > d.Date && d.Date > DateTime.Now.AddYears(-1))
+                                .Select(c => new { c.Price, c.Date, c.User })
+                                .OrderByDescending(c => c.Date)
+                                .AsEnumerable()
+                                .Select(c => new Tuple<decimal, string, string, int>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id), Int16.Parse(c.Date.ToString("dd"))))
+                                .OrderBy(c => c.Item4)
+                                .ToArray();
         }
     }
 }
