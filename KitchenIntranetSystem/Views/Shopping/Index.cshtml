@@ -248,7 +248,7 @@
             for (var j = 0; j < chartData.length; ++j) {
                 if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n] && chartData[j].Item4 <= c) {
                     var test = chartData[j].Item4;
-                    newDataset.data[test-1] = chartData[j].Item1;
+                    newDataset.data[test-1] += chartData[j].Item1;
                 }
             }
             config.data.datasets.push(newDataset);
@@ -256,6 +256,7 @@
 
         // Add labels for the first c days of this month
         for (var j = 1; j <= c; j++) {
+            config.data.labels.push(j + " " + MONTHS[n]);
         }
 
         //Show chart.
@@ -266,12 +267,10 @@
         removeAllDataSets();
         removeAllData();
         var d = new Date();
-        var lastMonthInt = d.getMonth() - 1;
-        var daysInMonth;
+        var n = d.getMonth()-1;
+        var c = 31;
         debugger;
-
         for (var i = 0; i < userNames.length; i++) {
-            daysInMonth = daysInMonthFunc(lastMonthInt+1, 2017);
             var newDataset = {
                 label: userNames[i],
                 borderColor: randomColor(0.4),
@@ -279,24 +278,25 @@
                 pointBorderColor: randomColor(0.7),
                 pointBackgroundColor: randomColor(0.5),
                 pointBorderWidth: 1,
-                data: [],
+                data: new Array(c).fill(0), // 0-array of length c (set to null if you don't want points on the x-axis)
                 hidden: false, //false: show data on load.
             };
-            for (var j = 0; j < daysInMonth; ++j) {
-                if (chartData[j] != null && chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[lastMonthInt]) {
-                    newDataset.data.push(chartData[j].Item1);
-                }
-                else {
-                    newDataset.data.push(0);
+            for (var j = 0; j < chartData.length; ++j) {
+                if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n] && chartData[j].Item4 <= c) {
+                    var test = chartData[j].Item4;
+                    newDataset.data[test - 1] += chartData[j].Item1;
                 }
             }
-
             config.data.datasets.push(newDataset);
         }
-        for (var j = 1; j <= daysInMonth; j++) {
-            config.data.labels.push(MONTHS[lastMonthInt] + "-" + j);
+
+        // Add labels for the first c days of this month
+        for (var j = 1; j <= c; j++) {
+            config.data.labels.push(j + " " + MONTHS[n]);
         }
-            window.myLine.update();
+
+        //Show chart.
+        window.myLine.update();
     });
 
 </script>
