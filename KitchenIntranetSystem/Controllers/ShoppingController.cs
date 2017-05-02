@@ -27,11 +27,12 @@ namespace KitchenIntranetSystem.Controllers
         public async Task<IActionResult> Index()
         {
             var chartData = _context.Shopping
-                            .Where(d => DateTime.Now.AddDays(1) > d.Date && d.Date > DateTime.Now.AddYears(-1))
+                            .Where(d => DateTime.Now > d.Date && d.Date > DateTime.Now.AddYears(-1))
                             .Select(c => new { c.Price, c.Date, c.User })
+                            .OrderByDescending(c => c.Date)
                             .AsEnumerable()
-                            .Select(c => new Tuple<decimal, string, string>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id)))
-                            .OrderBy(d => d.Item2)
+                            .Select(c => new Tuple<decimal, string, string, string>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id), c.Date.ToString("dd")))
+                            .OrderBy(c => c.Item4)
                             .ToArray();
             ViewData["UserNames"] = JsonConvert.SerializeObject(_user.GetAllUsersFullName);
             ViewData["ChartData"] = JsonConvert.SerializeObject(chartData);

@@ -192,6 +192,24 @@
         }
     };
 
+    var removeAllDataSets = function () {
+        config.data.datasets.splice(0, config.data.datasets.length);
+        window.myLine.update();
+    };
+
+    var removeAllData = function () {
+        config.data.labels.splice(0, config.data.labels.length); // remove the label first
+        for (var i = 0; i < config.data.labels.length; i++) {
+            dataset.data.pop();
+        }
+
+        window.myLine.update();
+    };
+
+    function daysInMonth(month, year) {
+        return new Date(year, month, 0).getDate();
+    }
+
     document.getElementById('removeDataset').onclick = function () {
         config.data.datasets.splice(0, 1);
         window.myLine.update();
@@ -210,6 +228,43 @@
     // ---------------- MY OWN SHIT ------------------------------------
     $('#thisMonth').click(function ()
     {
+        removeAllDataSets();
+        removeAllData();
+        var d = new Date();
+        var n = d.getMonth();
+        var c = d.getDay();
+        debugger;
+        for (var j = 1; j <= c; j++) {
+            config.data.labels.push(MONTHS[n] + "-" + j);
+        }
+        for (var i = 0; i < userNames.length; i++) {
+            var newDataset = {
+                label: userNames[i],
+                borderColor: randomColor(0.4),
+                backgroundColor: randomColor(0.5),
+                pointBorderColor: randomColor(0.7),
+                pointBackgroundColor: randomColor(0.5),
+                pointBorderWidth: 1,
+                data: [],
+                hidden: false, //false: show data on load.
+            };
+            for (var j = 0; j < chartData.length; ++j) {
+                if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n]) {
+                    newDataset.data.push(chartData[j].Item1);
+                }
+                else {
+                    newDataset.data.push(0);
+                }
+            }
+
+            config.data.datasets.push(newDataset);
+            window.myLine.update();
+        }
+    });
+
+    $('#lastMonth').click(function () {
+        removeAllData();
+        removeAllDataSets();
         var d = new Date();
         var n = d.getMonth();
         for (var i = 0; i < userNames.length; i++) {
@@ -224,9 +279,9 @@
                 hidden: true,
             };
             for (var j = 0; j < chartData.length; ++j) {
-                if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n]) {
+                if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n-1]) {
                     newDataset.data.push(chartData[j].Item1);
-                    config.data.labels.push(chartData[j].Item2)
+                    config.data.labels.push(chartData[j].Item2 + "-" + chartData[j].Item4)
                 }
                 else {
                 }
@@ -235,10 +290,6 @@
             config.data.datasets.push(newDataset);
             window.myLine.update();
         }
-    });
-
-    $('#lastMonth').click(function () {
-        alert("lastMonth");
     });
     $('#lastThreeMonths').click(function () {
         alert("lastThreeMonths");
