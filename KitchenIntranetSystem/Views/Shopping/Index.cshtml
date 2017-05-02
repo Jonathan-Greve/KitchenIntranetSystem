@@ -59,29 +59,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
-        <div class="dropdown col-xs-12">
-            <button class="btn btn-primary dropdown-toggle col-xs-12" type="button" data-toggle="dropdown">
-                Users
-                <span class="caret"></span>
-            </button>
-            <ul id="dropDownUsers" class="dropdown-menu col-xs-12">
-            </ul>
+    <div class="col-md-12">
+        <div class="btn btn-group">
+            <button type="button" class="btn btn-primary">Line</button>
+            <button type="button" class="btn btn-primary">Bar</button>
+            <button type="button" class="btn btn-primary">Radar</button>
         </div>
-    </div>
-    <div class="col-md-6 ">
-        <div class="dropdown col-xs-12">
-            <button class="btn btn-primary dropdown-toggle col-xs-12" type="button" data-toggle="dropdown">
-                Dates
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu col-xs-12">
-                <li><a id="thisMonth" href="#">This Month</a></li>
-                <li><a id="lastMonth" href="#">Last Month</a></li>
-                <li><a id="lastThreeMonths" href="#">Last 3 Months</a></li>
-                <li><a id="lastSixMonths" href="#">Last 6 Months</a></li>
-                <li><a id="lastTwelveMonths" href="#">Last 12 Months</a></li>
-            </ul>
+        <div class="btn btn-group">
+            <button id="thisMonth" type="button" class="btn btn-primary">This Month</button>
+            <button id="lastMonth" type="button" class="btn btn-primary">Last Month</button>
+            <button id="lastThreeMonths" type="button" class="btn btn-primary">Last 3 Months</button>
+            <button id="lastSixMonths" type="button" class="btn btn-primary">Last 6 Months</button>
+            <button id="lastTwelveMonths" type="button" class="btn btn-primary">Last 12 Months</button>
         </div>
   </div>
 </div>
@@ -95,13 +84,6 @@
 <script>
     var userNames = @Html.Raw(UserNames);
     var chartData = @Html.Raw(ChartData);
-    $(document).ready(function () {
-        var node = document.createElement("li");
-        for (var i = 0; i < userNames.length; i++) {
-            node.innerHTML += "<a href='#'>" + userNames[i] + "</a>"
-        }
-        document.getElementById("dropDownUsers").appendChild(node);
-    });
 
     var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -126,7 +108,7 @@
             responsive: true,
             title: {
                 display: true,
-                text: 'Shopping Data - This Month'
+                text: 'Shopping Data'
             },
             scales: {
                 xAxes: [{
@@ -299,4 +281,17 @@
         window.myLine.update();
     });
 
+    function change(newType) {
+        var ctx = document.getElementById("canvas").getContext("2d");
+
+        // Remove the old chart and all its event handles
+        if (window.myLine) {
+            window.myLine.destroy();
+        }
+
+        // Chart.js modifies the object you pass in. Pass a copy of the object so we can use the original object later
+        var temp = jQuery.extend(true, {}, config);
+        temp.type = newType;
+        window.myLine = new Chart(ctx, temp);
+    };
 </script>
