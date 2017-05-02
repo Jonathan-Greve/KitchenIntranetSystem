@@ -72,15 +72,15 @@
     <div class="col-md-6 ">
         <div class="dropdown col-xs-12">
             <button class="btn btn-primary dropdown-toggle col-xs-12" type="button" data-toggle="dropdown">
-                Dropdown Example
+                Dates
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu col-xs-12">
-                <li><a href="#">This Month</a></li>
-                <li><a href="#">Last Month</a></li>
-                <li><a href="#">Last 3 Months</a></li>
-                <li><a href="#">Last 6 Months</a></li>
-                <li><a href="#">Last 12 Months</a></li>
+                <li><a id="thisMonth" href="#">This Month</a></li>
+                <li><a id="lastMonth" href="#">Last Month</a></li>
+                <li><a id="lastThreeMonths" href="#">Last 3 Months</a></li>
+                <li><a id="lastSixMonths" href="#">Last 6 Months</a></li>
+                <li><a id="lastTwelveMonths" href="#">Last 12 Months</a></li>
             </ul>
         </div>
   </div>
@@ -96,7 +96,7 @@
     var userNames = @Html.Raw(UserNames);
     var chartData = @Html.Raw(ChartData);
     $(document).ready(function () {
-        var node = document.createElement("li"); // Create a <li> node
+        var node = document.createElement("li");
         for (var i = 0; i < userNames.length; i++) {
             node.innerHTML += "<a href='#'>" + userNames[i] + "</a>"
         }
@@ -126,7 +126,7 @@
             responsive: true,
             title: {
                 display: true,
-                text: 'Chart.js Line Chart'
+                text: 'Shopping Data - This Month'
             },
             scales: {
                 xAxes: [{
@@ -208,25 +208,46 @@
     };
 
     // ---------------- MY OWN SHIT ------------------------------------
-    document.getElementById('thisMonth').onclick = function () {
-        var newDataset = {
-            label: 'Dataset ' + config.data.datasets.length,
-            borderColor: randomColor(0.4),
-            backgroundColor: randomColor(0.5),
-            pointBorderColor: randomColor(0.7),
-            pointBackgroundColor: randomColor(0.5),
-            pointBorderWidth: 1,
-            data: [],
-        };
-
-        if (config.data.labels) {
-            for (var index = 0; index < config.data.labels.length; ++index) {
-                newDataset.data.push(randomScalingFactor());
+    $('#thisMonth').click(function ()
+    {
+        var d = new Date();
+        var n = d.getMonth();
+        for (var i = 0; i < userNames.length; i++) {
+            var newDataset = {
+                label: userNames[i],
+                borderColor: randomColor(0.4),
+                backgroundColor: randomColor(0.5),
+                pointBorderColor: randomColor(0.7),
+                pointBackgroundColor: randomColor(0.5),
+                pointBorderWidth: 1,
+                data: [],
+                hidden: true,
+            };
+            for (var j = 0; j < chartData.length; ++j) {
+                if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n]) {
+                    newDataset.data.push(chartData[j].Item1);
+                    config.data.labels.push(chartData[j].Item2)
+                }
+                else {
+                }
             }
-        }
 
-        config.data.datasets.push(newDataset);
-        window.myLine.update();
-    };
+            config.data.datasets.push(newDataset);
+            window.myLine.update();
+        }
+    });
+
+    $('#lastMonth').click(function () {
+        alert("lastMonth");
+    });
+    $('#lastThreeMonths').click(function () {
+        alert("lastThreeMonths");
+    });
+    $('#lastSixMonths').click(function () {
+        alert("lastSixMonths");
+    });
+    $('#lastTwelveMonths').click(function () {
+        alert("lastTwelveMonths");
+    });
 
 </script>
