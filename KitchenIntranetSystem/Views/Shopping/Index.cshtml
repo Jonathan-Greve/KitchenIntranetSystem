@@ -71,18 +71,16 @@
             <button id="lastSixMonths" type="button" class="btn btn-primary">Last 6 Months</button>
             <button id="lastTwelveMonths" type="button" class="btn btn-primary">Last 12 Months</button>
         </div>
+    </div>
   </div>
 </div>
 <div class="col-md-12">
     <canvas id="canvas"></canvas>
-<button id="addDataset">Add Dataset</button>
-<button id="removeDataset">Remove Dataset</button>
-<button id="addData">Add Data</button>
-<button id="removeData">Remove Data</button>
 </div>
 <script>
     var userNames = @Html.Raw(UserNames);
     var chartData = @Html.Raw(ChartData);
+    var currentType = 'bar';
 
     var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -98,33 +96,30 @@
     };
 
     var config = {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: [],
             datasets: []
         },
         options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'Shopping Data'
-            },
             scales: {
                 xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        show: true,
-                        labelString: 'Month'
+                    stacked: true,
+                    gridLines: {
+                        display: false
                     }
                 }],
                 yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        show: true,
-                        labelString: 'Value'
-                    }
+                    stacked: true
                 }]
             }
+        }
+    };
+    var config2 = {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: []
         }
     };
 
@@ -137,45 +132,11 @@
     });
 
     var ctx = document.getElementById("canvas").getContext("2d");
-    window.myChart = new Chart(ctx, config);
-
-    document.getElementById('addDataset').onclick = function () {
-        var newDataset = {
-            label: 'Dataset ' + config.data.datasets.length,
-            borderColor: randomColor(0.4),
-            backgroundColor: randomColor(0.5),
-            pointBorderColor: randomColor(0.7),
-            pointBackgroundColor: randomColor(0.5),
-            pointBorderWidth: 1,
-            data: [],
-        };
-
-        if (config.data.labels) {
-            for (var index = 0; index < config.data.labels.length; ++index) {
-                newDataset.data.push(randomScalingFactor());
-            }
-        }
-
-        config.data.datasets.push(newDataset);
-        window.myChart.update();
-    };
-
-    document.getElementById('addData').onclick = function () {
-        if (config.data.datasets.length > 0) {
-            var month = MONTHS[config.data.labels.length % MONTHS.length];
-            config.data.labels.push(month);
-
-            config.data.datasets.forEach(function (dataset) {
-                dataset.data.push(randomScalingFactor());
-            });
-
-            window.myChart.update();
-        }
-    };
+    myChart = new Chart(ctx, config);
 
     var removeAllDataSets = function () {
         config.data.datasets.splice(0, config.data.datasets.length);
-        window.myChart.update();
+        myChart.update();
     };
 
     var removeAllData = function () {
@@ -184,29 +145,13 @@
             dataset.data.pop();
         }
 
-        window.myChart.update();
+        myChart.update();
     };
 
     function daysInMonthFunc(month, year) {
         return new Date(year, month, 0).getDate();
     }
 
-    document.getElementById('removeDataset').onclick = function () {
-        config.data.datasets.splice(0, 1);
-        window.myChart.update();
-    };
-
-    document.getElementById('removeData').onclick = function () {
-        config.data.labels.splice(-1, 1); // remove the label first
-
-        config.data.datasets.forEach(function (dataset, datasetIndex) {
-            dataset.data.pop();
-        });
-
-        window.myChart.update();
-    };
-
-    // ---------------- MY OWN SHIT ------------------------------------
     $('#thisMonth').click(function ()
     {
         removeAllDataSets();
@@ -240,7 +185,7 @@
         }
 
         //Show chart.
-        change(config.type);
+        change(currentType);
     });
 
     $('#lastMonth').click(function () {
@@ -275,7 +220,7 @@
         }
 
         //Show chart.
-        change(config.type);
+        change(currentType);
     });
 
     $("#line").click(function () {
@@ -287,12 +232,17 @@
 
     function change(newType) {
         // Remove the old chart and all its event handlers
-        if (window.myChart) {
-            window.myChart.destroy();
-        }
+        myChart.destroy();
 
-        config.type = newType;
-        window.myChart = new Chart(ctx, config);
-        window.myChart.update();
+        if (newType == 'bar') {
+            config.type = newType;
+            myChart = new Chart(ctx, config);
+        }
+        if (newType == 'line') {
+            config2.data.datasets = config.data.datasets;
+            config2.data.labels = config.data.labels;
+            myChart = new Chart(ctx, config2);
+        }
+        currentType = newType;
     };
 </script>
