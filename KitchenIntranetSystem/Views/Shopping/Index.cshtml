@@ -75,7 +75,7 @@
     </div>
   </div>
 </div>
-<div class="col-md-12">
+<div id="canvasParent" style="width: 50%; margin:0 auto;">
     <canvas id="canvas"></canvas>
 </div>
 <script>
@@ -233,12 +233,15 @@
     });
 
     $("#line").click(function () {
+        $('#canvasParent').width('100%')
         change("line");
     });
     $("#bar").click(function () {
+        $('#canvasParent').width('100%')
         change("bar");
     });
     $("#radar").click(function () {
+        $('#canvasParent').width( '50%' )
         change("radar");
     });
 
