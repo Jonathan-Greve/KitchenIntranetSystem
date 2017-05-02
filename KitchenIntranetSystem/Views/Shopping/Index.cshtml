@@ -61,9 +61,8 @@
   <div class="row">
     <div class="col-md-12">
         <div class="btn btn-group">
-            <button type="button" class="btn btn-primary">Line</button>
-            <button type="button" class="btn btn-primary">Bar</button>
-            <button type="button" class="btn btn-primary">Radar</button>
+            <button id="line" type="button" class="btn btn-primary">Line</button>
+            <button id="bar" type="button" class="btn btn-primary">Bar</button>
         </div>
         <div class="btn btn-group">
             <button id="thisMonth" type="button" class="btn btn-primary">This Month</button>
@@ -138,7 +137,7 @@
     });
 
     var ctx = document.getElementById("canvas").getContext("2d");
-    window.myLine = new Chart(ctx, config);
+    window.myChart = new Chart(ctx, config);
 
     document.getElementById('addDataset').onclick = function () {
         var newDataset = {
@@ -158,7 +157,7 @@
         }
 
         config.data.datasets.push(newDataset);
-        window.myLine.update();
+        window.myChart.update();
     };
 
     document.getElementById('addData').onclick = function () {
@@ -170,13 +169,13 @@
                 dataset.data.push(randomScalingFactor());
             });
 
-            window.myLine.update();
+            window.myChart.update();
         }
     };
 
     var removeAllDataSets = function () {
         config.data.datasets.splice(0, config.data.datasets.length);
-        window.myLine.update();
+        window.myChart.update();
     };
 
     var removeAllData = function () {
@@ -185,7 +184,7 @@
             dataset.data.pop();
         }
 
-        window.myLine.update();
+        window.myChart.update();
     };
 
     function daysInMonthFunc(month, year) {
@@ -194,7 +193,7 @@
 
     document.getElementById('removeDataset').onclick = function () {
         config.data.datasets.splice(0, 1);
-        window.myLine.update();
+        window.myChart.update();
     };
 
     document.getElementById('removeData').onclick = function () {
@@ -204,7 +203,7 @@
             dataset.data.pop();
         });
 
-        window.myLine.update();
+        window.myChart.update();
     };
 
     // ---------------- MY OWN SHIT ------------------------------------
@@ -215,7 +214,6 @@
         var d = new Date();
         var n = d.getMonth();
         var c = d.getDay();
-        debugger;
         for (var i = 0; i < userNames.length; i++) {
             var newDataset = {
                 label: userNames[i],
@@ -242,16 +240,15 @@
         }
 
         //Show chart.
-        window.myLine.update();
+        change(config.type);
     });
 
     $('#lastMonth').click(function () {
         removeAllDataSets();
         removeAllData();
         var d = new Date();
-        var n = d.getMonth()-1;
-        var c = 31;
-        debugger;
+        var n = d.getMonth() - 1;
+        var c = daysInMonthFunc(n + 1, d.getFullYear());
         for (var i = 0; i < userNames.length; i++) {
             var newDataset = {
                 label: userNames[i],
@@ -278,20 +275,24 @@
         }
 
         //Show chart.
-        window.myLine.update();
+        change(config.type);
+    });
+
+    $("#line").click(function () {
+        change("line");
+    });
+    $("#bar").click(function () {
+        change("bar");
     });
 
     function change(newType) {
-        var ctx = document.getElementById("canvas").getContext("2d");
-
-        // Remove the old chart and all its event handles
-        if (window.myLine) {
-            window.myLine.destroy();
+        // Remove the old chart and all its event handlers
+        if (window.myChart) {
+            window.myChart.destroy();
         }
 
-        // Chart.js modifies the object you pass in. Pass a copy of the object so we can use the original object later
-        var temp = jQuery.extend(true, {}, config);
-        temp.type = newType;
-        window.myLine = new Chart(ctx, temp);
+        config.type = newType;
+        window.myChart = new Chart(ctx, config);
+        window.myChart.update();
     };
 </script>
