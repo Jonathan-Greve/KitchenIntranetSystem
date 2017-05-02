@@ -24,14 +24,20 @@ namespace KitchenIntranetSystem.Controllers
         }
 
         // GET: Shopping
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
             var chartData = GetChartData();
-            var applicationDbContext = _context.Shopping.Include(s => s.User);
+            var shopping = SortedData(sortOrder);
 
+            //For Sorting, Filtering, Paging
+            ViewData["UserSortParm"] = String.IsNullOrEmpty(sortOrder) ? "user_desc" : "";
+            ViewData["PriceSortParm"] = sortOrder == "price" ? "price_desc" : "price";
+            ViewData["itemBoughtParm"] = sortOrder == "item" ? "item-desc" : "item";
+            ViewData["DateSortParm"] = sortOrder == "date" ? "date_desc" : "date";
+            //For Charts
             ViewData["UserNames"] = JsonConvert.SerializeObject(_user.GetAllUsersFullName);
             ViewData["ChartData"] = JsonConvert.SerializeObject(chartData);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await shopping.ToListAsync());
         }
 
         // GET: Shopping/Details/5
@@ -176,6 +182,41 @@ namespace KitchenIntranetSystem.Controllers
                                 .Select(c => new Tuple<decimal, string, string, int>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id), Int16.Parse(c.Date.ToString("dd"))))
                                 .OrderBy(c => c.Item4)
                                 .ToArray();
+        }
+
+        private IOrderedQueryable<Shopping> SortedData(string sortOrder)
+        {
+            IOrderedQueryable<Shopping> shopping;
+
+            switch (sortOrder)
+            {
+                case "user_desc":
+                    shopping = _context.Shopping.Include(s => s.User).OrderByDescending(s => s.User.FirstName + " " + s.User.LastName);
+                    break;
+                case "price":
+                    shopping = _context.Shopping.Include(s => s.User).OrderBy(s => s.Price);
+                    break;
+                case "price_desc":
+                    shopping = _context.Shopping.Include(s => s.User).OrderByDescending(s => s.Price);
+                    break;
+                case "item":
+                    shopping = _context.Shopping.Include(s => s.User).OrderBy(s => s.ItemBought);
+                    break;
+                case "item-desc":
+                    shopping = _context.Shopping.Include(s => s.User).OrderByDescending(s => s.ItemBought);
+                    break;
+                case "date":
+                    shopping = _context.Shopping.Include(s => s.User).OrderBy(s => s.Date);
+                    break;
+                case "date_desc":
+                    shopping = _context.Shopping.Include(s => s.User).OrderByDescending(s => s.Date);
+                    break;
+                default:
+                    shopping = _context.Shopping.Include(s => s.User).OrderBy(s => s.User.FirstName + " " + s.User.LastName);
+                    break;
+            }
+
+            return shopping;
         }
     }
 }
