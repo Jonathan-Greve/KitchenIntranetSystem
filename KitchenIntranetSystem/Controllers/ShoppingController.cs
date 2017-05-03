@@ -24,21 +24,31 @@ namespace KitchenIntranetSystem.Controllers
         }
 
         // GET: Shopping
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? page)
         {
             var chartData = GetChartData();
             var shopping = SortedData(sortOrder, searchString);
 
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            int pageSize = 5;
             //For Sorting, Filtering, Paging, Searching
             ViewData["UserSortParm"] = String.IsNullOrEmpty(sortOrder) ? "user_desc" : "";
             ViewData["PriceSortParm"] = sortOrder == "price" ? "price_desc" : "price";
             ViewData["itemBoughtParm"] = sortOrder == "item" ? "item-desc" : "item";
             ViewData["DateSortParm"] = sortOrder == "date" ? "date_desc" : "date";
             ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
             //For Charts
             ViewData["UserNames"] = JsonConvert.SerializeObject(_user.GetAllUsersFullName);
             ViewData["ChartData"] = JsonConvert.SerializeObject(chartData);
-            return View(await shopping.ToListAsync());
+            return View(await PaginatedList<Shopping>.CreateAsync(shopping.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Shopping/Details/5

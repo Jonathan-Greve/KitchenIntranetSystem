@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KitchenIntranetSystem.Models.Shopping>
+﻿@model PaginatedList<KitchenIntranetSystem.Models.Shopping>
 @{
     ViewData["Title"] = "Index";
     var UserNames = ViewBag.UserNames;
@@ -27,16 +27,16 @@
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["UserSortParm"]">@Html.DisplayNameFor(model => model.User)</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["UserSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" >Users</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]">@Html.DisplayNameFor(model => model.Price)</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]">Price</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["itemBoughtParm"]">@Html.DisplayNameFor(model => model.ItemBought)</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["itemBoughtParm"]">Item</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Date)</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Date</a>
             </th>
             <th></th>
         </tr>
@@ -65,6 +65,25 @@
 }
     </tbody>
 </table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
 
 <div class="container">
   <div class="row">
