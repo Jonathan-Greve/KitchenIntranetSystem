@@ -395,6 +395,69 @@
         //Show chart.
         change(currentType);
     });
+
+    $('#lastTwelveMonths').click(function () {
+        debugger;
+        removeAllDataSets();
+        removeAllData();
+        var d = new Date();
+        var n = d.getMonth() - 1;
+        var c = new Array(12);
+        for (var i = 11; i >= 0; i--) {
+            var year = d.getFullYear();
+            if (n - i < 0) {
+                c[i] = daysInMonthFunc(n + 1 - i, year - 1);
+            } else {
+                c[i] = daysInMonthFunc(n + 1 - i, year);
+            }
+        }
+        for (var i = 0; i < userNames.length; i++) {
+            var newDataset = {
+                label: userNames[i],
+                borderColor: randomColor(0.4),
+                backgroundColor: randomColor(0.5),
+                pointBorderColor: randomColor(0.7),
+                pointBackgroundColor: randomColor(0.5),
+                pointBorderWidth: 1,
+                data: new Array(c.reduce(add, 0)).fill(0), // 0-array of length c (set to null if you don't want points on the x-axis)
+                hidden: false, //false: show data on load.
+            };
+            for (var k = 11; k >= 0; k--) {
+                if (n - k < 0) {
+                    for (var j = 0; j < chartData.length; ++j) {
+                        if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[12 + n - k] && chartData[j].Item4 <= c[k] && chartData[j].Item5 != d.getFullYear()) {
+                            var test = chartData[j].Item4 + (c.slice(k + 1, n+9).reduce(add, 0));
+                            newDataset.data[test - 1] += chartData[j].Item1;
+                        }
+                    }
+                } else {
+                    for (var j = 0; j < chartData.length; ++j) {
+                        if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n - k] && chartData[j].Item4 <= c[k]) {
+                            var test = chartData[j].Item4 + (c.slice(k + 1, n + 9).reduce(add, 0));
+                            newDataset.data[test - 1] += chartData[j].Item1;
+                        }
+                    }
+                }
+            }
+            config.data.datasets.push(newDataset);
+        }
+
+        for (var i = 11; i >= 0; i--) {
+            if (n - i < 0) {
+                for (var j = 1; j <= c[i]; j++) {
+                    config.data.labels.push(j + " " + MONTHS[12 + n - i]);
+                }
+            } else {
+                for (var j = 1; j <= c[i]; j++) {
+                    config.data.labels.push(j + " " + MONTHS[n - i]);
+                }
+            }
+        }
+
+        //Show chart.
+        change(currentType);
+    });
+
     $("#line").click(function () {
         $('#canvasParent').width('70%')
         change("line");
