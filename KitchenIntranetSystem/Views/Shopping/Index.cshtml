@@ -103,14 +103,16 @@
     </div>
   </div>
 </div>
-<div id="canvasParent" style="width: 100%; margin:0 auto;">
+<div id="canvasParent" style="width: 70%; margin:0 auto;">
     <canvas id="canvas"></canvas>
 </div>
 <script>
     var userNames = @Html.Raw(UserNames);
     var chartData = @Html.Raw(ChartData);
     var currentType = 'bar';
-
+    $(document).ready(function () {
+        thisMonthFunc();
+    });
     var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     var randomScalingFactor = function () {
@@ -188,9 +190,7 @@
     function daysInMonthFunc(month, year) {
         return new Date(year, month, 0).getDate();
     }
-
-    $('#thisMonth').click(function ()
-    {
+    function thisMonthFunc() {
         removeAllDataSets();
         removeAllData();
         var d = new Date();
@@ -210,7 +210,7 @@
             for (var j = 0; j < chartData.length; ++j) {
                 if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n] && chartData[j].Item4 <= c) {
                     var test = chartData[j].Item4;
-                    newDataset.data[test-1] += chartData[j].Item1;
+                    newDataset.data[test - 1] += chartData[j].Item1;
                 }
             }
             config.data.datasets.push(newDataset);
@@ -223,6 +223,11 @@
 
         //Show chart.
         change(currentType);
+    }
+
+    $('#thisMonth').click(function ()
+    {
+        thisMonthFunc();
     });
 
     $('#lastMonth').click(function () {
@@ -261,15 +266,15 @@
     });
 
     $("#line").click(function () {
-        $('#canvasParent').width('100%')
+        $('#canvasParent').width('70%')
         change("line");
     });
     $("#bar").click(function () {
-        $('#canvasParent').width('100%')
+        $('#canvasParent').width('70%')
         change("bar");
     });
     $("#radar").click(function () {
-        $('#canvasParent').width( '50%' )
+        $('#canvasParent').width( '35%' )
         change("radar");
     });
 
