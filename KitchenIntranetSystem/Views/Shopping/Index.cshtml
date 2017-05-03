@@ -214,8 +214,8 @@
             };
             for (var j = 0; j < chartData.length; ++j) {
                 if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n] && chartData[j].Item4 <= c) {
-                    var test = chartData[j].Item4;
-                    newDataset.data[test - 1] += chartData[j].Item1;
+                    var insertPos = chartData[j].Item4;
+                    newDataset.data[insertPos - 1] += chartData[j].Item1;
                 }
             }
             config.data.datasets.push(newDataset);
@@ -254,8 +254,8 @@
             };
             for (var j = 0; j < chartData.length; ++j) {
                 if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n] && chartData[j].Item4 <= c) {
-                    var test = chartData[j].Item4;
-                    newDataset.data[test - 1] += chartData[j].Item1;
+                    var insertPos = chartData[j].Item4;
+                    newDataset.data[insertPos - 1] += chartData[j].Item1;
                 }
             }
             config.data.datasets.push(newDataset);
@@ -271,7 +271,6 @@
     });
 
     $('#lastThreeMonths').click(function () {
-        debugger;
         removeAllDataSets();
         removeAllData();
         var d = new Date();
@@ -296,20 +295,19 @@
                 data: new Array(c.reduce(add, 0)).fill(0), // 0-array of length c (set to null if you don't want points on the x-axis)
                 hidden: false, //false: show data on load.
             };
-            debugger;
             for (var k = 2; k >= 0; k--) {
                 if (n - k < 0) {
                     for (var j = 0; j < chartData.length; ++j) {
                         if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[12 + n - k] && chartData[j].Item4 <= c[k] && chartData[j].Item5 != d.getFullYear()) {
-                            var test = chartData[j].Item4 + (c.slice(k + 1, n).reduce(add, 0));
-                            newDataset.data[test - 1] += chartData[j].Item1;
+                            var insertPos = chartData[j].Item4 + (c.slice(k + 1, n).reduce(add, 0));
+                            newDataset.data[insertPos - 1] += chartData[j].Item1;
                         }
                     }
                 } else {
                     for (var j = 0; j < chartData.length; ++j) {
                         if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n - k] && chartData[j].Item4 <= c[k]) {
-                            var test = chartData[j].Item4 + (c.slice(k + 1, n + 3).reduce(add, 0));
-                            newDataset.data[test - 1] += chartData[j].Item1;
+                            var insertPos = chartData[j].Item4 + (c.slice(k + 1, n + 3).reduce(add, 0));
+                            newDataset.data[insertPos - 1] += chartData[j].Item1;
                         }
                     }
                 }
@@ -334,7 +332,6 @@
     });
 
     $('#lastSixMonths').click(function () {
-        debugger;
         removeAllDataSets();
         removeAllData();
         var d = new Date();
@@ -359,20 +356,19 @@
                 data: new Array(c.reduce(add, 0)).fill(0), // 0-array of length c (set to null if you don't want points on the x-axis)
                 hidden: false, //false: show data on load.
             };
-            debugger;
             for (var k = 5; k >= 0; k--) {
                 if (n - k < 0) {
                     for (var j = 0; j < chartData.length; ++j) {
                         if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[12 + n - k] && chartData[j].Item4 <= c[k] && chartData[j].Item5 != d.getFullYear()) {
-                            var test = chartData[j].Item4 + (c.slice(k + 1, n + 3).reduce(add, 0));
-                            newDataset.data[test - 1] += chartData[j].Item1;
+                            var insertPos = chartData[j].Item4 + (c.slice(k + 1, n + 3).reduce(add, 0));
+                            newDataset.data[insertPos - 1] += chartData[j].Item1;
                         }
                     }
                 } else {
                     for (var j = 0; j < chartData.length; ++j) {
                         if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n - k] && chartData[j].Item4 <= c[k]) {
-                            var test = chartData[j].Item4 + (c.slice(k + 1, n+3).reduce(add, 0));
-                            newDataset.data[test - 1] += chartData[j].Item1;
+                            var insertPos = chartData[j].Item4 + (c.slice(k + 1, n+3).reduce(add, 0));
+                            newDataset.data[insertPos - 1] += chartData[j].Item1;
                         }
                     }
                 }
@@ -397,7 +393,6 @@
     });
 
     $('#lastTwelveMonths').click(function () {
-        debugger;
         removeAllDataSets();
         removeAllData();
         var d = new Date();
@@ -426,15 +421,15 @@
                 if (n - k < 0) {
                     for (var j = 0; j < chartData.length; ++j) {
                         if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[12 + n - k] && chartData[j].Item4 <= c[k] && chartData[j].Item5 != d.getFullYear()) {
-                            var test = chartData[j].Item4 + (c.slice(k + 1, n+9).reduce(add, 0));
-                            newDataset.data[test - 1] += chartData[j].Item1;
+                            var insertPos = chartData[j].Item4 + (c.slice(k + 1, n+9).reduce(add, 0));
+                            newDataset.data[insertPos - 1] += chartData[j].Item1;
                         }
                     }
                 } else {
                     for (var j = 0; j < chartData.length; ++j) {
                         if (chartData[j].Item3 == userNames[i] && chartData[j].Item2 == MONTHS[n - k] && chartData[j].Item4 <= c[k]) {
-                            var test = chartData[j].Item4 + (c.slice(k + 1, n + 9).reduce(add, 0));
-                            newDataset.data[test - 1] += chartData[j].Item1;
+                            var insertPos = chartData[j].Item4 + (c.slice(k + 1, n + 9).reduce(add, 0));
+                            newDataset.data[insertPos - 1] += chartData[j].Item1;
                         }
                     }
                 }
