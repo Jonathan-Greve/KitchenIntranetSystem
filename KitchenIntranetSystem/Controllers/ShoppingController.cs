@@ -183,14 +183,14 @@ namespace KitchenIntranetSystem.Controllers
             return _context.Shopping.Any(e => e.Id == id);
         }
 
-        private Tuple<decimal, string, string, int>[] GetChartData()
+        private Tuple<decimal, string, string, int, int>[] GetChartData()
         {
             return _context.Shopping
                                 .Where(d => DateTime.Now > d.Date && d.Date > DateTime.Now.AddYears(-1))
                                 .Select(c => new { c.Price, c.Date, c.User })
                                 .OrderByDescending(c => c.Date)
                                 .AsEnumerable()
-                                .Select(c => new Tuple<decimal, string, string, int>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id), Int16.Parse(c.Date.ToString("dd"))))
+                                .Select(c => new Tuple<decimal, string, string, int, int>(c.Price, c.Date.ToString("MMMM"), _user.GetFullName(c.User.Id), Int16.Parse(c.Date.ToString("dd")), Int16.Parse(c.Date.ToString("yyyy"))))
                                 .OrderBy(c => c.Item4)
                                 .ToArray();
         }
