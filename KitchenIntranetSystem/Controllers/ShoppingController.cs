@@ -24,16 +24,17 @@ namespace KitchenIntranetSystem.Controllers
         }
 
         // GET: Shopping
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             var chartData = GetChartData();
-            var shopping = SortedData(sortOrder);
+            var shopping = SortedData(sortOrder, searchString);
 
-            //For Sorting, Filtering, Paging
+            //For Sorting, Filtering, Paging, Searching
             ViewData["UserSortParm"] = String.IsNullOrEmpty(sortOrder) ? "user_desc" : "";
             ViewData["PriceSortParm"] = sortOrder == "price" ? "price_desc" : "price";
             ViewData["itemBoughtParm"] = sortOrder == "item" ? "item-desc" : "item";
             ViewData["DateSortParm"] = sortOrder == "date" ? "date_desc" : "date";
+            ViewData["CurrentFilter"] = searchString;
             //For Charts
             ViewData["UserNames"] = JsonConvert.SerializeObject(_user.GetAllUsersFullName);
             ViewData["ChartData"] = JsonConvert.SerializeObject(chartData);
@@ -184,35 +185,44 @@ namespace KitchenIntranetSystem.Controllers
                                 .ToArray();
         }
 
-        private IOrderedQueryable<Shopping> SortedData(string sortOrder)
+        private IQueryable<Shopping> SortedData(string sortOrder, string searchString)
         {
-            IOrderedQueryable<Shopping> shopping;
-
+            IQueryable<Shopping> shopping = _context.Shopping;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                shopping = shopping.Where(s => s.User.FirstName.Contains(searchString)
+                || s.User.LastName.Contains(searchString)
+                || s.User.Id.Contains(searchString)
+                || s.User.Email.Contains(searchString)
+                || s.User.PhoneNumber.Contains(searchString)
+                || s.ItemBought.Contains(searchString)
+                );
+            }
             switch (sortOrder)
             {
                 case "user_desc":
-                    shopping = _context.Shopping.Include(s => s.User).OrderByDescending(s => s.User.FirstName + " " + s.User.LastName);
+                    shopping = shopping.Include(s => s.User).OrderByDescending(s => s.User.LastName).ThenBy(u => u.User.FirstName);
                     break;
                 case "price":
-                    shopping = _context.Shopping.Include(s => s.User).OrderBy(s => s.Price);
+                    shopping = shopping.Include(s => s.User).OrderBy(s => s.Price);
                     break;
                 case "price_desc":
-                    shopping = _context.Shopping.Include(s => s.User).OrderByDescending(s => s.Price);
+                    shopping = shopping.Include(s => s.User).OrderByDescending(s => s.Price);
                     break;
                 case "item":
-                    shopping = _context.Shopping.Include(s => s.User).OrderBy(s => s.ItemBought);
+                    shopping = shopping.Include(s => s.User).OrderBy(s => s.ItemBought);
                     break;
                 case "item-desc":
-                    shopping = _context.Shopping.Include(s => s.User).OrderByDescending(s => s.ItemBought);
+                    shopping = shopping.Include(s => s.User).OrderByDescending(s => s.ItemBought);
                     break;
                 case "date":
-                    shopping = _context.Shopping.Include(s => s.User).OrderBy(s => s.Date);
+                    shopping = shopping.Include(s => s.User).OrderBy(s => s.Date);
                     break;
                 case "date_desc":
-                    shopping = _context.Shopping.Include(s => s.User).OrderByDescending(s => s.Date);
+                    shopping = shopping.Include(s => s.User).OrderByDescending(s => s.Date);
                     break;
                 default:
-                    shopping = _context.Shopping.Include(s => s.User).OrderBy(s => s.User.FirstName + " " + s.User.LastName);
+                    shopping = shopping.Include(s => s.User).OrderBy(s => s.User.LastName).ThenBy(u => u.User.FirstName);
                     break;
             }
 
